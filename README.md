@@ -5,7 +5,7 @@
 The **Lookback Option Pricing Library** is a C++ project designed to price **European lookback options** using Monte Carlo simulation under the Black–Scholes model.  
 The library computes both the option price and the full set of Greeks (Delta, Gamma, Theta, Rho, Vega), and includes an Excel-based interface for user interaction.
 
-This project was developed as part of the **M2 Ingénierie et Finance** program.
+This project was developed as part of the **M2QF** program.
 
 ---
 
