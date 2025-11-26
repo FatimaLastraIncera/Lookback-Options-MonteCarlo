@@ -2,10 +2,7 @@
 
 ## Overview
 
-The **Lookback Option Pricing Library** is a C++ project designed to price **European lookback options** using Monte Carlo simulation under the Black–Scholes model.  
-The library computes both the option price and the full set of Greeks (Delta, Gamma, Theta, Rho, Vega), and includes an Excel-based interface for user interaction.
-
-This project was developed as part of the **M2QF** program.
+The **Lookback Option Pricing Library** is a C++ project designed to price **European lookback options** using Monte Carlo simulation under the Black–Scholes model. The library computes both the option price and the full set of Greeks (Delta, Gamma, Theta, Rho, Vega), and includes an Excel-based interface for user interaction.
 
 ---
 
@@ -66,25 +63,6 @@ S_{t+\Delta t} = S_t \exp\left((r - \tfrac{1}{2}\sigma^2)\Delta t +
 Monte Carlo simulation is used to approximate the expectation under the risk-neutral measure.
 
 ---
-
-## Outputs
-
-The C++ code computes the following:
-
-| Quantity | Description |
-|---------|-------------|
-| Price | Theoretical Monte Carlo price |
-| Delta | Sensitivity to spot price |
-| Gamma | Sensitivity to second-order changes in spot |
-| Theta | Sensitivity to time |
-| Vega | Sensitivity to volatility |
-| Rho | Sensitivity to interest rate |
-| Price graph | \(P(S,T_0)\) as a function of spot |
-| Delta graph | \(\Delta(S,T_0)\) as a function of spot |
-
----
-
-## Example (Excel Interface Preview)
 
 *Insert here a screenshot of your Excel interface with inputs, results, and graphs.*
 
