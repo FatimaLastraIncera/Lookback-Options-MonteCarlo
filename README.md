@@ -1,4 +1,4 @@
-# Lookback Option Pricing Library (Monte Carlo – C++)
+# Lookback Option Pricing Library 
 
 ## Overview
 
