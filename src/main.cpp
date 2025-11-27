@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "LookbackPricer.hpp"
+#include "LookbackPricer.h"
 
 int main() {
     // Example parameters
