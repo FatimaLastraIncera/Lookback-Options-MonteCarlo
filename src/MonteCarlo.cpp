@@ -1,4 +1,4 @@
-#include "LookbackPricer.hpp"
+#include "LookbackPricer.h"
 
 #include <random>
 #include <cmath>
