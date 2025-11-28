@@ -9,6 +9,8 @@ include_directories(include)
 
 # Source files
 add_executable(lookback_pricer
-    main.cpp
+    src/main.cpp
     src/MonteCarlo.cpp
+    src/LookbackPricer.cpp
+    src/Greeks.cpp
 )

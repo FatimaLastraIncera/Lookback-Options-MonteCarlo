@@ -1,0 +1,10 @@
+^C:\USERS\FATIL\DOCUMENTS\PARIS\UNIVERSIDAD\C++ FERREIRA\LOOKBACK-OPTIONS-MONTECARLO\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/fatil/Documents/PARIS/Universidad/C++ Ferreira/Lookback-Options-MonteCarlo" "-BC:/Users/fatil/Documents/PARIS/Universidad/C++ Ferreira/Lookback-Options-MonteCarlo/build" --check-stamp-file "C:/Users/fatil/Documents/PARIS/Universidad/C++ Ferreira/Lookback-Options-MonteCarlo/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
