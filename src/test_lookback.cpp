@@ -1,11 +1,11 @@
+#include "LookbackOption.h"
+#include "Greeks.h"
+#include "ExactLookbackPrice.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <cmath>
-#include "LookbackOption.h"
-#include "Greeks.h"
-#include "ExactLookbackPrice.h"
 
 int main() {
     MCParams params;
