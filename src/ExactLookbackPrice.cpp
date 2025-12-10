@@ -1,48 +1,75 @@
 #include "ExactLookbackPrice.h"
 #include <cmath>
 
-// Normal CDF (approximation – good enough for pricing)
+// Standard normal cumulative distribution function using erfc
 double norm_cdf(double x) {
     return 0.5 * std::erfc(-x / std::sqrt(2.0));
 }
 
-// -------- Floating-strike Lookback Call (Goldman 1979) --------
-double lookback_call_exact(double S0, double Smin,
-                           double r, double sigma, double T)
+// -----------------------------------------------------------------------------
+// Exact price of a floating-strike lookback Call
+// Goldman (1979)
+// -----------------------------------------------------------------------------
+double lookback_call_exact(const double S0,
+                           const double Smin,
+                           const double r,
+                           const double sigma,
+                           const double T)
 {
-    double sqrtT = std::sqrt(T);
-    double sig2 = sigma * sigma;
+    // Precompute frequently used quantities
+    const double sqrtT = std::sqrt(T);
+    const double sig2  = sigma * sigma;
+    const double logSM = std::log(S0 / Smin);
 
-    double a1 = ( std::log(S0 / Smin) + (r + 0.5 * sig2) * T ) / (sigma * sqrtT);
-    double a2 = a1 - sigma * sqrtT;
-    double a3 = ( std::log(S0 / Smin) + (-r + 0.5 * sig2) * T ) / (sigma * sqrtT);
+    // Auxiliary variables from the closed-form formula
+    const double a1 = (logSM + (r + 0.5 * sig2) * T) / (sigma * sqrtT);
+    const double a2 = a1 - sigma * sqrtT;
+    const double a3 = (logSM + (-r + 0.5 * sig2) * T) / (sigma * sqrtT);
 
-    double Y1 = -2.0 * (r - 0.5 * sig2) * std::log(S0 / Smin) / sig2;
+    // Drift adjustment term
+    const double Y1 = -2.0 * (r - 0.5 * sig2) * logSM / sig2;
 
-    double part1 = S0 * ( norm_cdf(a1) - (sig2/(2*r)) * norm_cdf(-a1) );
-    double part2 = -Smin * std::exp(-r*T)
-                   * ( norm_cdf(a2) - (sig2/(2*r)) * std::exp(Y1) * norm_cdf(-a3) );
+    // Discount factor and volatility coefficient
+    const double discount = std::exp(-r * T);
+    const double coeff    = sig2 / (2.0 * r);
+
+    // Pricing formula
+    const double part1 = S0 * ( norm_cdf(a1) - coeff * norm_cdf(-a1) );
+    const double part2 = -Smin * discount * ( norm_cdf(a2) - coeff * std::exp(Y1) * norm_cdf(-a3) );
 
     return part1 + part2;
 }
 
-// -------- Floating-strike Lookback Put (Goldman 1979) --------
-double lookback_put_exact(double S0, double Smax,
-                          double r, double sigma, double T)
+// -----------------------------------------------------------------------------
+// Exact price of a floating-strike lookback Put
+// Goldman (1979)
+// -----------------------------------------------------------------------------
+double lookback_put_exact(const double S0, 
+                          const double Smax,
+                          const double r,
+                          const double sigma,
+                          const double T)
 {
-    double sqrtT = std::sqrt(T);
-    double sig2 = sigma * sigma;
+    // Precompute frequently used quantities
+    const double sqrtT = std::sqrt(T);
+    const double sig2  = sigma * sigma;
+    const double logMS = std::log(Smax / S0);
 
-    double b1 = ( std::log(Smax / S0) + (-r + 0.5 * sig2) * T ) / (sigma * sqrtT);
-    double b2 = b1 - sigma * sqrtT;
-    double b3 = ( std::log(Smax / S0) + (r - 0.5 * sig2) * T ) / (sigma * sqrtT);
+    // Auxiliary variables from the closed-form formula
+    const double b1 = (logMS + (-r + 0.5 * sig2) * T) / (sigma * sqrtT);
+    const double b2 = b1 - sigma * sqrtT;
+    const double b3 = (logMS + (r - 0.5 * sig2) * T) / (sigma * sqrtT);
 
-    double Y2 = 2.0 * (r - 0.5 * sig2) * std::log(S0 / Smax) / sig2;
+    // Drift adjustment term from the reflection principle
+    const double Y2 = 2.0 * (r - 0.5 * sig2) * std::log(S0 / Smax) / sig2;
 
-    double part1 = Smax * std::exp(-r*T)
-                   * ( norm_cdf(b1) - (sig2/(2*r)) * std::exp(Y2) * norm_cdf(-b3) );
+    // Discount factor and volatility coefficient
+    const double discount = std::exp(-r * T);
+    const double coeff = sig2 / (2.0 * r);
 
-    double part2 =  S0 * ( (sig2/(2*r)) * norm_cdf(-b2) - norm_cdf(b2) );
+    // Pricing formula
+    const double part1 = Smax * discount * ( norm_cdf(b1) - coeff * std::exp(Y2) * norm_cdf(-b3) );
+    const double part2 = S0 * ( coeff * norm_cdf(-b2) - norm_cdf(b2) );
 
     return part1 + part2;
 }

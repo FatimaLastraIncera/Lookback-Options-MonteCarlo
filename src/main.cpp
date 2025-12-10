@@ -1,64 +1,145 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
 #include <cmath>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 #include "LookbackOption.h"
 #include "Greeks.h"
 #include "ExactLookbackPrice.h"
 
-int main() {
+// -----------------------------------------------------------------------------
+// Main program
+// - Reads inputs from file (Excel-compatible)
+// - Computes exact price and Monte Carlo price + Greeks
+// - Writes results and sensitivity curves to files
+// -----------------------------------------------------------------------------
+int main()
+{
+    // -------------------------------------------------------------------------
+    // Define base path for input and output files
+    // Files are read from and written to the executable directory
+    // -------------------------------------------------------------------------
+    const std::string basePath = fs::current_path().string();
+
+    // Optional debug log
+    std::ofstream log(basePath + "/debug_log.txt");
+    log << "BASE PATH = " << basePath << "\n";
+    log.close();
+
+    // -------------------------------------------------------------------------
+    // Read input parameters
+    // -------------------------------------------------------------------------
     MCParams params;
+    std::ifstream f(basePath + "/excel_inputs.txt");
+
+    if (!f) {
+        std::cerr << "ERROR: excel_inputs.txt not found in " << basePath << "\n";
+        return 1;
+    }
+
+    f >> params.S0;
+    f >> params.r;
+    f >> params.sigma;
+    f >> params.T;
+
     int typeInt;
+    f >> typeInt;
+    params.type = (typeInt == 1 ? LookbackType::Call : LookbackType::Put);
 
-    std::cout << "===== Lookback Option Pricer (Monte Carlo) =====\n";
+    f >> params.nPaths;
+    f >> params.nSteps;
 
-    std::cout << "Spot price S0: ";
-    std::cin >> params.S0;
+    f.close();
 
-    std::cout << "Risk-free rate r: ";
-    std::cin >> params.r;
+    // -------------------------------------------------------------------------
+    // Safety defaults (avoid degenerate Monte Carlo settings)
+    // -------------------------------------------------------------------------
+    if (params.nSteps < 1)    params.nSteps = 50;
+    if (params.nPaths < 1000) params.nPaths = 50000;
 
-    std::cout << "Volatility sigma: ";
-    std::cin >> params.sigma;
+    // -------------------------------------------------------------------------
+    // Exact price (closed-form)
+    // -------------------------------------------------------------------------
+    double exactPrice = 0.0;
 
-    std::cout << "Time to maturity T in years: ";
-    std::cin >> params.T;
+    if (params.type == LookbackType::Call) {
+        exactPrice = lookback_call_exact(params.S0, params.S0,
+                                         params.r, params.sigma, params.T);
+    } else {
+        exactPrice = lookback_put_exact(params.S0, params.S0,
+                                        params.r, params.sigma, params.T);
+    }
 
-    std::cout << "Option type (1 = Call, 2 = Put): ";
-    std::cin >> typeInt;
-    params.type = (typeInt == 1) ? LookbackType::Call : LookbackType::Put;
+    // -------------------------------------------------------------------------
+    // Monte Carlo price and Greeks
+    // Central finite differences with common random numbers
+    // -------------------------------------------------------------------------
+    const unsigned long seed = 12345UL;
 
-    std::cout << "Number of Monte Carlo paths: ";
-    std::cin >> params.nPaths;
+    Greeks g = compute_greeks_MC(params,
+                                 1.0,           // bump in S
+                                 0.0001,        // bump in sigma
+                                 0.01,          // bump in r
+                                 1.0 / 365.0,   // bump in T
+                                 seed);
 
-    std::cout << "Number of time-steps per path: ";
-    std::cin >> params.nSteps;
+    // -------------------------------------------------------------------------
+    // Write numerical results (Excel-friendly)
+    // -------------------------------------------------------------------------
+    std::ofstream out(basePath + "/excel_results.txt");
+    out << exactPrice << "\n"
+        << g.price << "\n"
+        << g.delta << "\n"
+        << g.gamma << "\n"
+        << g.theta << "\n"
+        << g.rho   << "\n"
+        << g.vega  << "\n";
+    out.close();
 
-    unsigned long seed = 12345UL;
+    // -------------------------------------------------------------------------
+    // Price curve as a function of the initial spot
+    // -------------------------------------------------------------------------
+    std::ofstream priceFile(basePath + "/price_curve.csv");
+    priceFile << "S,Price\n";
 
-    // ===== EXACT PRICE =====
-    double exact = 0.0;
+    for (int i = 0; i <= 20; ++i) {
+        const double w = static_cast<double>(i) / 20.0;
+        const double S = params.S0 * (0.5 + w * (1.5 - 0.5));
 
-    if (params.type == LookbackType::Call)
-        exact = lookback_call_exact(params.S0, params.S0,
-                                    params.r, params.sigma, params.T);
-    else
-        exact = lookback_put_exact(params.S0, params.S0,
-                                   params.r, params.sigma, params.T);
+        MCParams tmp = params;
+        tmp.S0 = S;
 
-    // ===== MC PRICE + GREEKS =====
-    Greeks g = compute_greeks_MC(params, 1.0, 0.01, 0.0001, 1.0/365.0, seed);
+        const double price = price_lookback_MC(tmp, seed);
+        priceFile << S << "," << price << "\n";
+    }
+    priceFile.close();
 
-    std::cout << "\n===== Results =====\n";
-    std::cout << "Exact Price       = " << exact << "\n";
-    std::cout << "MC Price          = " << g.price << "\n";
-    std::cout << "Delta             = " << g.delta << "\n";
-    std::cout << "Gamma             = " << g.gamma << "\n";
-    std::cout << "Theta             = " << g.theta << "\n";
-    std::cout << "Rho               = " << g.rho   << "\n";
-    std::cout << "Vega              = " << g.vega  << "\n";
-    std::cout << "Absolute Error    = " << std::fabs(g.price - exact) << "\n\n";
+    // -------------------------------------------------------------------------
+    // Delta curve as a function of the initial spot
+    // -------------------------------------------------------------------------
+    std::ofstream deltaFile(basePath + "/delta_curve.csv");
+    deltaFile << "S,Delta\n";
+
+    for (int i = 0; i <= 20; ++i) {
+        const double w = static_cast<double>(i) / 20.0;
+        const double S = params.S0 * (0.5 + w * (1.5 - 0.5));
+
+        MCParams tmp = params;
+        tmp.S0 = S;
+
+        Greeks gS = compute_greeks_MC(tmp,
+                                      1.0,
+                                      0.0001,
+                                      0.01,
+                                      1.0 / 365.0,
+                                      seed);
+
+        deltaFile << S << "," << gS.delta << "\n";
+    }
+    deltaFile.close();
 
     return 0;
 }
