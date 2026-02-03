@@ -24,7 +24,7 @@ Support for European lookback **calls** and **puts**, parameterized by:
 - Variance reduction techniques (optional extension).
 
 ### • Greeks are computed within the Monte Carlo framework using: finite--difference estimators for Gamma, Theta and Rho and pathwise estimators for Delta and Vega
-<img width="696" height="387" alt="image" src="https://github.com/user-attachments/assets/08f4d63c-c188-47d3-ae4a-8f575c37f798" />
+<img width="687" height="362" alt="image" src="https://github.com/user-attachments/assets/11042f22-825e-4f32-9736-70bc71bbd3c3" />
 
 
 ## References
