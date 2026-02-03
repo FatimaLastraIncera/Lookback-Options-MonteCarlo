@@ -24,11 +24,8 @@ Support for European lookback **calls** and **puts**, parameterized by:
 - Variance reduction techniques (optional extension).
 
 ### • Greeks calculation: computed numerically using finite-difference estimators (Delta, Gamma, Theta, Rho, Vega).
----
+<img width="696" height="387" alt="image" src="https://github.com/user-attachments/assets/08f4d63c-c188-47d3-ae4a-8f575c37f798" />
 
-*Insert here a screenshot of your Excel interface with inputs, results, and graphs.*
-
----
 
 ## References
 
