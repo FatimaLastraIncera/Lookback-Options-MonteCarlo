@@ -10,10 +10,10 @@ The **Lookback Option Pricing Library** is a C++ project designed to price **Eur
 
 ### • Lookback Option Representation  
 Support for European lookback **calls** and **puts**, parameterized by:  
-- Spot price \(S_0\)  
-- Risk-free rate \(r\)  
-- Volatility \(\sigma\)  
-- Maturity \(T\)  
+- Spot price 
+- Risk-free rate  
+- Volatility
+- Maturity
 - Number of Monte Carlo paths  
 - Time discretization steps  
 
