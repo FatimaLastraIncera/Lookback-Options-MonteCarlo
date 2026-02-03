@@ -23,17 +23,23 @@ Support for European lookback **calls** and **puts**, parameterized by:
 - Discounted expected payoff estimator.  
 - Variance reduction techniques (optional extension).
 
-### • Greeks calculation: computed numerically using finite-difference estimators (Delta, Gamma, Theta, Rho, Vega).
+### • Greeks are computed within the Monte Carlo framework using: finite--difference estimators for Gamma, Theta and Rho and pathwise estimators for Delta and Vega
 <img width="696" height="387" alt="image" src="https://github.com/user-attachments/assets/08f4d63c-c188-47d3-ae4a-8f575c37f798" />
 
 
 ## References
 
-1. **John Hull**, *Options, Futures and Other Derivatives*, Pearson (2011).  
-2. **Paul Glasserman**, *Monte Carlo Methods in Financial Engineering*, Springer (2003).  
-3. **Emmanuel Gobet**, *Monte Carlo Methods and Stochastic Processes*, CRC Press (2016).  
-4. **Paul Wilmott**, *Mathematics of Financial Derivatives*, Wiley (1995).
+1. **Andersen, L.** (1996). *Exact exotics*. **Risk**.  
 
+2. **Black, F. and Scholes, M.** (1973). *The pricing of options and corporate liabilities*.  
+   **Journal of Political Economy**, 81(3), 637–654.  
+
+3. **Glasserman, P.** (2003). *Monte Carlo Methods in Financial Engineering*.  
+   **Stochastic Modelling and Applied Probability**, Springer, New York.  
+
+4. **Goldman, M. B., Sosin, H. B., and Gatto, M. A.** (1979).  
+   *Path dependent options: “buy at the low, sell at the high”*.  
+   **Journal of Finance**, 34(5), 1111–1127.  
 ---
 
 ## License
