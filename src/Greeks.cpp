@@ -11,11 +11,23 @@
 #include <algorithm>
 #include <vector>
 
+/**
+ * @brief Forward declaration of Monte Carlo pricer used in Greeks computations.
+ */
 double price_lookback_MC(const MCParams& p, unsigned long seed);
 
-// -----------------------------------------------------------------------------
-// PRICE + DELTA + VEGA (pathwise) in a single MC run
-// -----------------------------------------------------------------------------
+/**
+ * @brief Compute price, delta and vega pathwise in a single Monte Carlo run.
+ *
+ * This uses a pathwise derivative approach for Delta and Vega while
+ * accumulating the discounted payoff for price.
+ *
+ * @param p Monte Carlo parameters.
+ * @param seed RNG seed for reproducibility.
+ * @param outPrice Output parameter for price.
+ * @param outDelta Output parameter for delta.
+ * @param outVega Output parameter for vega.
+ */
 static void price_delta_vega_pathwise(const MCParams& p,
                                       unsigned long seed,
                                       double& outPrice,
@@ -92,11 +104,19 @@ static void price_delta_vega_pathwise(const MCParams& p,
     outVega  = disc * (sumVega   * invM);
 }
 
-// -----------------------------------------------------------------------------
-// Compute option price and Greeks (PLAIN MC)
-// - Delta & Vega: pathwise
-// - Gamma, Rho, Theta: central finite differences with CRN (same seed)
-// -----------------------------------------------------------------------------
+/**
+ * @brief Compute option price and Greeks using Monte Carlo.
+ *
+ * Delta and Vega are computed pathwise; Gamma, Rho and Theta use central
+ * finite differences with common random numbers for variance reduction.
+ *
+ * @param base Base Monte Carlo parameters.
+ * @param bumpS Bump for underlying price (Gamma calculation).
+ * @param bumpR Bump for interest rate (Rho calculation).
+ * @param bumpT Bump for maturity (Theta calculation).
+ * @param seed RNG seed for reproducibility.
+ * @return Greeks structure with computed sensitivities.
+ */
 Greeks compute_greeks_MC(const MCParams& base,
                          double bumpS,
                          double bumpR,

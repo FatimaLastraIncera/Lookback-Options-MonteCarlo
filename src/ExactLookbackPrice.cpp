@@ -1,15 +1,25 @@
 #include "ExactLookbackPrice.h"
 #include <cmath>
 
-// Standard normal cumulative distribution function using erfc
+/**
+ * @brief Standard normal cumulative distribution function using `erfc`.
+ * @param x Input value.
+ * @return CDF of standard normal at `x`.
+ */
 double norm_cdf(double x) {
     return 0.5 * std::erfc(-x / std::sqrt(2.0));
 }
 
-// -----------------------------------------------------------------------------
-// Exact price of a floating-strike lookback Call
-// Goldman (1979)
-// -----------------------------------------------------------------------------
+/**
+ * @brief Exact price of a floating-strike lookback Call (Goldman, 1979).
+ *
+ * @param S0 Current spot price.
+ * @param Smin Minimum observed spot.
+ * @param r Risk-free rate.
+ * @param sigma Volatility.
+ * @param T Time to maturity.
+ * @return Exact call price.
+ */
 double lookback_call_exact(const double S0,
                            const double Smin,
                            const double r,
@@ -40,10 +50,16 @@ double lookback_call_exact(const double S0,
     return part1 + part2;
 }
 
-// -----------------------------------------------------------------------------
-// Exact price of a floating-strike lookback Put
-// Goldman (1979)
-// -----------------------------------------------------------------------------
+/**
+ * @brief Exact price of a floating-strike lookback Put (Goldman, 1979).
+ *
+ * @param S0 Current spot price.
+ * @param Smax Maximum observed spot.
+ * @param r Risk-free rate.
+ * @param sigma Volatility.
+ * @param T Time to maturity.
+ * @return Exact put price.
+ */
 double lookback_put_exact(const double S0, 
                           const double Smax,
                           const double r,

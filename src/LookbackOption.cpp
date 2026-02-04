@@ -4,9 +4,15 @@
 #include <cmath>
 #include <vector>
 
-// -----------------------------------------------------------------------------
-// Payoff of a floating-strike lookback option
-// -----------------------------------------------------------------------------
+/**
+ * @brief Payoff of a floating-strike lookback option.
+ *
+ * @param ST Terminal asset price.
+ * @param Smin Minimum asset price along the simulated path.
+ * @param Smax Maximum asset price along the simulated path.
+ * @param type Option type (Call or Put).
+ * @return Payoff for the given path.
+ */
 double payoff_lookback(const double ST,
                        const double Smin,
                        const double Smax,
@@ -18,9 +24,13 @@ double payoff_lookback(const double ST,
         return std::max(Smax - ST, 0.0);
 }
 
-// -----------------------------------------------------------------------------
-// Monte Carlo pricing of a floating-strike lookback option
-// -----------------------------------------------------------------------------
+/**
+ * @brief Monte Carlo pricing of a floating-strike lookback option.
+ *
+ * @param params Monte Carlo parameters (see `MCParams`).
+ * @param seed RNG seed for reproducibility.
+ * @return Discounted expected payoff (price).
+ */
 double price_lookback_MC(const MCParams& params,
                          const unsigned long seed)
 {

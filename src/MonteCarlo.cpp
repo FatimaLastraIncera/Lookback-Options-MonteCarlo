@@ -2,28 +2,36 @@
 #include <cmath>
 #include <vector>
 
-// -----------------------------------------------------------------------------
-// Constructor: initializes model parameters and random number generator
-// -----------------------------------------------------------------------------
+/**
+ * @brief Construct a MonteCarlo object with model parameters and RNG seed.
+ *
+ * @param S0_ Initial asset price.
+ * @param r_ Risk-free rate.
+ * @param sigma_ Volatility.
+ * @param T_ Time to maturity.
+ * @param nSteps_ Number of time steps per path.
+ * @param seed RNG seed.
+ */
 MonteCarlo::MonteCarlo(const double S0_,
-                       const double r_,
-                       const double sigma_,
-                       const double T_,
-                       const int nSteps_,
-                       const unsigned long seed)
-    : S0(S0_),
-      r(r_),
-      sigma(sigma_),
-      T(T_),
-      nSteps(nSteps_),
-      rng(seed),
-      normal(0.0, 1.0)
+                                             const double r_,
+                                             const double sigma_,
+                                             const double T_,
+                                             const int nSteps_,
+                                             const unsigned long seed)
+        : S0(S0_),
+            r(r_),
+            sigma(sigma_),
+            T(T_),
+            nSteps(nSteps_),
+            rng(seed),
+            normal(0.0, 1.0)
 {
 }
 
-// -----------------------------------------------------------------------------
-// Generate one price path using Euler discretization of a Geometric Brownian Motion
-// -----------------------------------------------------------------------------
+/**
+ * @brief Generate one price path using Euler discretization of a Geometric Brownian Motion.
+ * @return Vector of simulated prices (size = nSteps + 1).
+ */
 std::vector<double> MonteCarlo::generate_path()
 {
     // Time step

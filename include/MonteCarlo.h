@@ -1,8 +1,8 @@
-// -----------------------------------------------------------------------------
-// MonteCarlo.h
-// Definition of a Monte Carlo engine for simulating price paths
-// under a Geometric Brownian Motion model
-// -----------------------------------------------------------------------------
+/**
+ * @file MonteCarlo.h
+ * @brief Monte Carlo engine for simulating price paths under
+ *        a Geometric Brownian Motion model.
+ */
 
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
@@ -12,7 +12,16 @@
 
 class MonteCarlo {
 public:
-    // Constructor: initializes model parameters and random number generator
+    /**
+     * @brief Construct a Monte Carlo engine.
+     *
+     * @param S0 Initial asset price.
+     * @param r Risk-free rate.
+     * @param sigma Volatility.
+     * @param T Time to maturity.
+     * @param nSteps Number of time steps per path.
+     * @param seed RNG seed.
+     */
     MonteCarlo(double S0,
                double r,
                double sigma,
@@ -20,6 +29,10 @@ public:
                int nSteps,
                unsigned long seed);
 
+    /**
+     * @brief Generate a single simulated price path.
+     * @return Vector of spot prices (size = nSteps + 1).
+     */
     std::vector<double> generate_path();
 
 private:

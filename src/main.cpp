@@ -10,12 +10,16 @@ namespace fs = std::filesystem;
 #include "Greeks.h"
 #include "ExactLookbackPrice.h"
 
-// -----------------------------------------------------------------------------
-// Main program
-// - Reads inputs from file (Excel-compatible)
-// - Computes exact price and Monte Carlo price + Greeks
-// - Writes results and sensitivity curves to files
-// -----------------------------------------------------------------------------
+/**
+ * @file main.cpp
+ * @brief Command-line driver: reads inputs, computes exact and Monte Carlo prices
+ *        and Greeks, and writes results to files.
+ */
+
+/**
+ * @brief Program entry point.
+ * @return Exit code (0 = success).
+ */
 int main()
 {
     // -------------------------------------------------------------------------

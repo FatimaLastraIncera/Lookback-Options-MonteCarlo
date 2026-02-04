@@ -1,8 +1,8 @@
-// -----------------------------------------------------------------------------
-// LookbackOption.h
-// Definition of data structures and functions for pricing floating-strike lookback 
-// options using Monte Carlo simulation
-// -----------------------------------------------------------------------------
+/**
+ * @file LookbackOption.h
+ * @brief Data structures and functions for pricing floating-strike lookback
+ *        options using Monte Carlo simulation.
+ */
 
 #ifndef LOOKBACK_OPTION_H
 #define LOOKBACK_OPTION_H
@@ -10,17 +10,17 @@
 #include <vector>
 #include <string>
 
-// -----------------------------------------------------------------------------
-// Type of lookback option
-// -----------------------------------------------------------------------------
+/**
+ * @brief Type of lookback option.
+ */
 enum class LookbackType {
     Call,
     Put
 };
 
-// -----------------------------------------------------------------------------
-// Parameters for Monte Carlo pricing
-// -----------------------------------------------------------------------------
+/**
+ * @brief Parameters for Monte Carlo pricing.
+ */
 struct MCParams {
     double S0;
     double r;
@@ -31,14 +31,24 @@ struct MCParams {
     int nSteps;
 };
 
-// -----------------------------------------------------------------------------
-// Payoff of a floating-strike lookback option
-// -----------------------------------------------------------------------------
+/**
+ * @brief Payoff of a floating-strike lookback option.
+ *
+ * @param ST Terminal spot price.
+ * @param minS Minimum spot along the path.
+ * @param maxS Maximum spot along the path.
+ * @param type Option type (Call/Put).
+ * @return Payoff value for the path.
+ */
 double payoff_lookback(double ST, double minS, double maxS, LookbackType type);
 
-// -----------------------------------------------------------------------------
-// Monte Carlo pricing of a floating-strike lookback option
-// -----------------------------------------------------------------------------
+/**
+ * @brief Monte Carlo pricing of a floating-strike lookback option.
+ *
+ * @param params Monte Carlo parameters (see `MCParams`).
+ * @param seed RNG seed (default = 123).
+ * @return Discounted Monte Carlo price.
+ */
 double price_lookback_MC(const MCParams& params, unsigned long seed = 123);
 
 #endif // LOOKBACK_OPTION_H

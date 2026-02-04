@@ -7,6 +7,15 @@
 #include <string>
 #include <cmath>
 
+/**
+ * @file test_lookback.cpp
+ * @brief Interactive test program for the lookback option pricer.
+ */
+
+/**
+ * @brief Interactive test entry point.
+ * @return Exit code.
+ */
 int main() {
     MCParams params;
     int typeInt;
