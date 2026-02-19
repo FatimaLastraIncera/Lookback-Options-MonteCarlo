@@ -137,8 +137,6 @@ Greeks compute_greeks_MC(const MCParams& base,
     const double p_dn = price_lookback_MC(dn, seed);
     const double p_0 = price_lookback_MC(base, seed);
 
-
-    // uses "that price" (g.price) as you wanted
     g.gamma = (p_up - 2.0 * p_0 + p_dn) / (bumpS * bumpS);
 
     // RHO (FD in r) with CRN
