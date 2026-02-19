@@ -119,6 +119,7 @@ static void price_delta_vega_pathwise(const MCParams& p,
  */
 Greeks compute_greeks_MC(const MCParams& base,
                          double bumpS,
+                         double bumpSigma,
                          double bumpR,
                          double bumpT,
                          unsigned long seed)
