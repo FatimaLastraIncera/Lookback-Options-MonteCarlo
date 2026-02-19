@@ -90,9 +90,6 @@ int main()
                                  1.0 / 365.0,   // bump in T
                                  seed);
 
-    // -------------------------------------------------------------------------
-    // Write numerical results (Excel-friendly)
-    // -------------------------------------------------------------------------
     std::ofstream out(basePath + "/excel_results.txt");
     out << exactPrice << "\n"
         << g.price << "\n"
