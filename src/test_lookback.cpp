@@ -46,7 +46,7 @@ int main() {
 
     unsigned long seed = 12345UL;
 
-    // ===== EXACT PRICE =====
+    // EXACT PRICE
     double exact = 0.0;
 
     if (params.type == LookbackType::Call)
@@ -56,7 +56,7 @@ int main() {
         exact = lookback_put_exact(params.S0, params.S0,
                                    params.r, params.sigma, params.T);
 
-    // ===== MC PRICE + GREEKS =====
+    // MC PRICE + GREEKS 
     Greeks g = compute_greeks_MC(params, 1.0, 0.01, 0.0001, 1.0/365.0, seed);
 
     std::cout << "\n===== Results =====\n";
